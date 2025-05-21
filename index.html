@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Report: Refining & Petrochemical Tech Evolution (1999-2024)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Visualization & Content Choices: 
+        - Overview: Text, styled lists. Goal: Inform. Interaction: Navigation.
+        - Core Processes: Text, cards, Table 1 data. Chart: Bar chart for ZSM-5 impact (qualitative representation of 'up to 8-9%' increase). Goal: Inform, Compare. Interaction: Clickable cards. Library: Chart.js.
+        - Environmental: Text, cards, Table 2 data. Chart: Bar chart for CCUS project capacities. Goal: Inform, Compare. Interaction: Clickable cards. Library: Chart.js.
+        - Digital Revolution: Text, cards, Table 3 data. Diagram: HTML/Tailwind for digital tech interplay. Goal: Inform, Organize. Interaction: Clickable cards.
+        - Strategic Integration: Text, cards, Tables 4 & 5 data. Charts: Bar chart for COTC yields; Donut chart for biofuel pathway maturity (qualitative). Goal: Inform, Compare. Interaction: Clickable cards. Library: Chart.js.
+        - Uncommercialized Tech: Text, cards with icons. Goal: Inform. Interaction: Minimal.
+        - Conclusion: Text, styled lists. Goal: Summarize. Interaction: Minimal.
+        All choices prioritize clarity, adherence to NO SVG/Mermaid, and support the thematic exploration designed for the SPA. Tables from the report are adapted into lists or specific data points for charts/cards.
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .tab-button {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .tab-button.active {
+            background-color: #0284c7; /* sky-600 */
+            color: white;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .card h3 {
+            color: #0369a1; /* sky-700 */
+        }
+        .details {
+            display: none;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #e5e7eb; /* stone-200 */
+        }
+        .toggle-button {
+            cursor: pointer;
+            color: #0ea5e9; /* sky-500 */
+            font-weight: 500;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Default max-width */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Base height */
+            max-height: 400px; /* Max height */
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            .chart-container {
+                height: 350px;
+            }
+        }
+        @media (min-width: 1024px) { /* lg breakpoint */
+            .chart-container {
+                max-width: 700px;
+                height: 400px;
+            }
+        }
+        .tooltip-custom {
+            background-color: rgba(0,0,0,0.75);
+            color: white;
+            border-radius: 0.25rem;
+            padding: 0.5rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body class="bg-stone-100 text-slate-700">
+
+    <header class="bg-sky-800 text-white p-6 shadow-md">
+        <div class="container mx-auto">
+            <h1 class="text-3xl font-bold text-center">Technological Evolution in Petroleum Refining & Petrochemicals (1999-2024)</h1>
+            <p class="text-center text-sky-200 mt-1">An Interactive Exploration of 25 Years of Innovation</p>
+        </div>
+    </header>
+
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto flex flex-wrap justify-center p-2 space-x-1 sm:space-x-2">
+            <button class="tab-button active text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2 rounded-md font-medium text-slate-700 hover:bg-sky-100" onclick="showSection('overview')">Overview</button>
+            <button class="tab-button text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2 rounded-md font-medium text-slate-700 hover:bg-sky-100" onclick="showSection('core_processes')">Core Processes</button>
+            <button class="tab-button text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2 rounded-md font-medium text-slate-700 hover:bg-sky-100" onclick="showSection('environmental')">Environmental Tech</button>
+            <button class="tab-button text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2 rounded-md font-medium text-slate-700 hover:bg-sky-100" onclick="showSection('digitalization')">Digitalization</button>
+            <button class="tab-button text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2 rounded-md font-medium text-slate-700 hover:bg-sky-100" onclick="showSection('strategic_integration')">Strategic Shifts</button>
+            <button class="tab-button text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2 rounded-md font-medium text-slate-700 hover:bg-sky-100" onclick="showSection('uncommercialized')">Uncommercialized</button>
+            <button class="tab-button text-sm sm:text-base px-3 py-2 sm:px-4 sm:py-2 rounded-md font-medium text-slate-700 hover:bg-sky-100" onclick="showSection('conclusion')">Conclusion</button>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4 sm:p-6">
+        <section id="overview" class="content-section active">
+            <div class="card">
+                <h2 class="text-2xl font-semibold mb-4 text-sky-700">Welcome: Understanding 25 Years of Change</h2>
+                <p class="mb-3">This interactive application provides an overview of the significant technological advancements and strategic shifts within the petroleum refining and petrochemical industries from approximately 1999 to 2024. The past quarter-century has been marked by dynamic market forces, stringent environmental regulations, and a fundamental shift in demand, driving innovation across the sector. This tool allows you to explore these changes thematically, understanding how the industry has adapted and what the future might hold.</p>
+                <p class="mb-3">The primary goal is to make the complex information from the source report more accessible and digestible. You can navigate through key areas such as advancements in core refining processes, environmental solutions, the impact of digitalization, major strategic realignments like Crude-to-Chemicals (COTC) and biofuel integration, and even technologies that didn't achieve widespread commercial success. Each section provides context, highlights key developments with examples, and uses visualizations to illustrate important data points.</p>
+            </div>
+            <div class="card">
+                <h3 class="text-xl font-semibold mb-3 text-sky-700">Key Drivers of Transformation (1999-2024)</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Volatile Energy Markets:</strong> Fluctuating crude oil prices demanded operational flexibility and cost discipline.</li>
+                    <li><strong>Stringent Environmental Regulations:</strong> Mandates for cleaner fuels (e.g., ULSD) and reduced emissions (SOx, NOx, CO2) spurred technological upgrades.</li>
+                    <li><strong>Shifting Demand Patterns:</strong> Plateauing demand for transportation fuels in mature economies contrasted with robust growth in petrochemical demand, especially in Asia.</li>
+                    <li><strong>Decarbonization Imperative:</strong> Growing global focus on climate change pushed for CCUS, renewable energy, and alternative feedstocks.</li>
+                    <li><strong>Technological Advancements:</strong> Enabled processing of heavier crudes and residues, improving margins and flexibility.</li>
+                </ul>
+                <p class="mt-3 text-sm text-slate-600">These drivers collectively reshaped the industry's operational landscape and strategic direction, pushing for greater efficiency, sustainability, and integration.</p>
+            </div>
+        </section>
+
+        <section id="core_processes" class="content-section">
+            <div class="card">
+                <h2 class="text-2xl font-semibold mb-4 text-sky-700">Advancements in Core Refining Processes & Catalysis</h2>
+                <p class="mb-3">Catalysis is the engine of refining, and the last 25 years have seen remarkable innovations. Driven by the need for cleaner fuels, higher yields of valuable petrochemicals, and the ability to process more challenging feedstocks, catalyst technology has evolved significantly. This section explores key advancements in Fluid Catalytic Cracking (FCC), Hydroprocessing (Hydrocracking and Hydrotreating), Catalytic Reforming, and novel catalyst synthesis methods. These developments have been crucial for enhancing efficiency, product quality, and operational flexibility in refineries worldwide.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3">Fluid Catalytic Cracking (FCC) Evolution</h3>
+                    <p>FCC units convert heavy gas oils into lighter products. Innovations focused on flexibility, propylene yield, and processing residues/bio-oils.</p>
+                    <div class="mt-2">
+                        <strong class="toggle-button" onclick="toggleDetails(this)">Key Innovations (Click to expand) &#x25BC;</strong>
+                        <div class="details">
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>ZSM-5 Additives:</strong> Increased propylene yield (up to 8-9% reported) and gasoline octane.</li>
+                                <li><strong>Hierarchically Structured Catalysts:</strong> Improved cracking of large molecules in heavy feeds.</li>
+                                <li><strong>Residue FCC (RFCC):</strong> Enabled processing of contaminated atmospheric residue.</li>
+                                <li><strong>Petrochemical FCC:</strong> Maximized light olefin yields (e.g., >40%) for chemical production.</li>
+                            </ul>
+                            <p class="text-sm mt-2"><em>Example: LUKOIL Neftohim Burgas adapted FCC ops for hydrotreated VGO feed.</em></p>
+                        </div>
+                    </div>
+                    <div class="chart-container mt-4 h-64 sm:h-72">
+                        <canvas id="fccPropyleneChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center mt-1 text-slate-500">Illustrative impact of ZSM-5 on propylene yield.</p>
+                </div>
+
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3">Hydroprocessing (Hydrocracking & Hydrotreating)</h3>
+                    <p>Essential for clean fuels (ULSD) and upgrading heavy fractions. Driven by environmental mandates.</p>
+                    <div class="mt-2">
+                        <strong class="toggle-button" onclick="toggleDetails(this)">Key Innovations (Click to expand) &#x25BC;</strong>
+                        <div class="details">
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>Advanced Hydrotreating Catalysts (CoMo, NiMo):</strong> Achieved >95% sulfur removal for ULSD. Trimetallic (NiMoW) for refractory sulfur.</li>
+                                <li><strong>Advanced Hydrocracking Catalysts:</strong> Bifunctional catalysts for high conversion (>90%) to middle distillates.</li>
+                                <li><strong>Nanocatalysts:</strong> Potential for higher activity (R&D focus).</li>
+                                <li><strong>Catalyst Rejuvenation:</strong> Restored near-fresh activity, cost savings (~50%), lower CO2 footprint. (e.g., Evonik Excel).</li>
+                            </ul>
+                            <p class="text-sm mt-2"><em>Impact: Enabled global clean fuel standards, upgraded low-quality crudes.</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mt-6">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3">Catalytic Reforming Enhancements</h3>
+                    <p>Boosts naphtha octane for gasoline and produces aromatics/hydrogen. Focus on stability and sulfur tolerance.</p>
+                    <div class="mt-2">
+                        <strong class="toggle-button" onclick="toggleDetails(this)">Key Innovations (Click to expand) &#x25BC;</strong>
+                        <div class="details">
+                            <p>Advanced Pt-based bimetallic/multimetallic catalysts (Pt-Re, Pt-Sn, Pt-Ru) improved activity, selectivity, and stability, especially sulfur tolerance (e.g., Pt/CeO2-Al2O3). Enabled high octane gasoline (up to 95 RON) and better aromatics yield.</p>
+                            <p class="text-sm mt-2"><em>Impact: Higher quality gasoline, more BTX, better refinery hydrogen balance.</em></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3">Novel Catalyst Synthesis Methods</h3>
+                    <p>Enabled precise control over catalyst structure at nanoscale for tailored performance.</p>
+                    <div class="mt-2">
+                        <strong class="toggle-button" onclick="toggleDetails(this)">Key Methods (Click to expand) &#x25BC;</strong>
+                        <div class="details">
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>Sol-Gel Process:</strong> Homogeneous materials, controlled porosity.</li>
+                                <li><strong>Microwave-Assisted Synthesis:</strong> Rapid, uniform heating for high surface area catalysts.</li>
+                                <li><strong>Atomic Layer Deposition (ALD):</strong> Precise thin film deposition for enhanced stability and longevity.</li>
+                            </ul>
+                            <p class="text-sm mt-2"><em>Impact: Foundational for next-gen catalysts with optimized activity, selectivity, and durability.</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="environmental" class="content-section">
+            <div class="card">
+                <h2 class="text-2xl font-semibold mb-4 text-sky-700">Environmental Technologies: Stricter Mandates & Decarbonization</h2>
+                <p class="mb-3">Environmental performance has been a major focus, evolving from controlling criteria pollutants (SOx, NOx) to mitigating greenhouse gas emissions. This section covers advancements in wastewater treatment and the rise of Carbon Capture, Utilization, and Storage (CCUS) as a key decarbonization lever. These technologies are critical for refineries and petrochemical plants to meet increasingly stringent regulations and contribute to climate goals.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3">Advanced Wastewater Treatment</h3>
+                    <p>Addressing complex contaminants in petroleum refinery wastewater (PRWW).</p>
+                    <div class="mt-2">
+                        <strong class="toggle-button" onclick="toggleDetails(this)">Key Innovations (Click to expand) &#x25BC;</strong>
+                        <div class="details">
+                            <p>Advanced Oxidation Processes (AOPs) like electrochemical oxidation and photocatalysis showed high removal efficiencies (>90% for COD, phenols). Integrated/hybrid approaches (e.g., membrane filtration + AOP) are also used.</p>
+                            <p class="text-sm mt-2"><em>Impact: Improved effluent quality, compliance, potential for water reuse.</em></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3">Carbon Capture, Utilization, and Storage (CCUS)</h3>
+                    <p>Critical for decarbonizing hard-to-abate emissions from refining and petrochemicals.</p>
+                    <div class="mt-2">
+                        <strong class="toggle-button" onclick="toggleDetails(this)">Capture Technologies (Click to expand) &#x25BC;</strong>
+                        <div class="details">
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>Post-Combustion:</strong> Amine solvents (most common for retrofit).</li>
+                                <li><strong>Pre-Combustion:</strong> CO2 removal before combustion (e.g., in SMR for blue H2).</li>
+                                <li><strong>Oxy-Fuel Combustion:</strong> Easier CO2 separation.</li>
+                                <li><strong>Other:</strong> Membranes, cryogenic separation.</li>
+                            </ul>
+                            <p class="text-sm mt-2"><em>Challenges: High cost (capture is ~75%), energy penalty, infrastructure needs, long lead times.</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-6">
+                <h3 class="text-xl font-semibold mb-3">Major CCUS Projects in Refining/Petrochemicals</h3>
+                <p class="mb-2 text-sm">The following chart illustrates the annual CO2 capture capacity of some significant CCUS projects related to the refining and petrochemical industries. These projects often target high-purity CO2 streams from processes like Steam Methane Reforming (SMR) or gasification, or are part of larger industrial hub initiatives.</p>
+                <div class="chart-container">
+                    <canvas id="ccusProjectsChart"></canvas>
+                </div>
+                 <p class="text-xs text-center mt-1 text-slate-500">Data from Table 2 of the source report. Capacities are approximate.</p>
+            </div>
+        </section>
+
+        <section id="digitalization" class="content-section">
+            <div class="card">
+                <h2 class="text-2xl font-semibold mb-4 text-sky-700">The Digital Revolution in Refining and Petrochemicals</h2>
+                <p class="mb-3">The last 10-15 years have seen a surge in digitalization, leveraging Industry 4.0 principles to transform data-rich refinery environments into smarter, more efficient operations. This section explores key enabling technologies like the Industrial Internet of Things (IIoT), AI/Machine Learning, and Digital Twins, along with their applications and impact on efficiency, reliability, safety, and sustainability. These tools are becoming essential for managing complexity and optimizing performance.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-2">IIoT & Big Data</h3>
+                    <p>Advanced sensors and connectivity generate vast data, processed by AI/ML for insights, prediction, and optimization.</p>
+                    <p class="text-sm mt-1"><em>Challenges: Coverage, reliability, cybersecurity.</em></p>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-2">Digital Twins</h3>
+                    <p>Dynamic virtual replicas of assets/processes, integrating real-time data and models for monitoring, simulation, and optimization.</p>
+                     <p class="text-sm mt-1"><em>Examples: BPCL Kochi, BP APEX, Shell Nyhamna.</em></p>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-2">Automation & Robotics</h3>
+                    <p>Expanding beyond process control to tasks like inspections (drones) and augmented field procedures, improving safety and efficiency.</p>
+                </div>
+            </div>
+
+            <div class="card mt-6">
+                <h3 class="text-xl font-semibold mb-3">Impact of Digitalization</h3>
+                 <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Operational Efficiency:</strong> Improved yields, reduced energy/utility use (up to 10% cited).</li>
+                    <li><strong>Reliability & Maintenance:</strong> Predictive maintenance reduces unplanned downtime, extends asset life.</li>
+                    <li><strong>Safety & Risk Management:</strong> Better situational awareness, automated hazardous tasks.</li>
+                    <li><strong>Sustainability & Compliance:</strong> Accurate emissions monitoring, optimization for lower carbon intensity.</li>
+                    <li><strong>Supply Chain & Planning:</strong> Better integration, improved forecasting, flexible manufacturing.</li>
+                </ul>
+                <p class="mt-3 text-sm text-slate-600">Digitalization is fundamentally altering operations, enabling management of complexity from diverse feedstocks, process integration, and environmental targets.</p>
+            </div>
+             <div class="card mt-6">
+                <h3 class="text-xl font-semibold mb-3">Conceptual Flow of Digital Technologies</h3>
+                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                    <div class="flex flex-col items-center space-y-3 text-center text-sm">
+                        <div class="p-2 bg-sky-100 text-sky-700 rounded shadow w-full md:w-3/4"><strong>Industrial Internet of Things (IIoT)</strong><br/>(Sensors, Real-time Data Collection)</div>
+                        <div>&#x2193; (Data Stream)</div>
+                        <div class="p-2 bg-sky-100 text-sky-700 rounded shadow w-full md:w-3/4"><strong>Big Data Analytics & AI/ML</strong><br/>(Pattern Recognition, Predictive Models)</div>
+                        <div>&#x2193; (Insights & Models)</div>
+                        <div class="p-2 bg-sky-100 text-sky-700 rounded shadow w-full md:w-3/4"><strong>Digital Twin</strong><br/>(Virtual Representation, Simulation, What-if Analysis)</div>
+                        <div>&#x2193; (Optimized Parameters & Predictions)</div>
+                        <div class="p-2 bg-sky-100 text-sky-700 rounded shadow w-full md:w-3/4"><strong>Advanced Process Control (APC) & Automation</strong><br/>(Implementation of Optimized Settings, Automated Actions)</div>
+                        <div>&#x21BA; (Feedback Loop to IIoT/Models)</div>
+                        <div class="p-2 bg-green-100 text-green-700 rounded shadow w-full md:w-3/4"><strong>Improved Outcomes</strong><br/>(Efficiency, Reliability, Safety, Sustainability)</div>
+                    </div>
+                </div>
+                <p class="mt-3 text-sm text-slate-600">This simplified diagram illustrates how digital technologies interconnect to enhance refinery operations. Real-world implementations are often more complex and integrated.</p>
+            </div>
+        </section>
+
+        <section id="strategic_integration" class="content-section">
+            <div class="card">
+                <h2 class="text-2xl font-semibold mb-4 text-sky-700">Strategic Integration and Diversification: Reshaping the Industry</h2>
+                <p class="mb-3">The industry's strategic landscape has been reshaped by "peak oil demand" forecasts for fuels, robust petrochemical growth, and the decarbonization drive. This has led to greater refinery-petrochemical integration, culminating in Crude-to-Chemicals (COTC) complexes, and significant investment in biofuel production and co-processing. This section explores these major strategic shifts aimed at maximizing value and adapting to a changing energy world.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3">Refinery-Petrochemical Integration & COTC</h3>
+                    <p>Maximizing direct conversion of crude oil to chemicals (target yields 40-50%, potentially 70-80% with new tech).</p>
+                    <div class="mt-2">
+                        <strong class="toggle-button" onclick="toggleDetails(this)">Key Aspects (Click to expand) &#x25BC;</strong>
+                        <div class="details">
+                            <p>Involves extensive hydrocracking, large steam crackers, aromatics complexes, and specialized FCCs. Novel tech like Aramco's TC2C emerging.</p>
+                            <p class="text-sm mt-1"><em>Examples: Hengli, ZPC (China); Aramco/SABIC projects (Saudi Arabia); S-Oil Shaheen (South Korea).</em></p>
+                            <p class="text-sm mt-1"><em>Challenges: Huge CAPEX ($10-20B+), technological complexity, market disruption potential.</em></p>
+                        </div>
+                    </div>
+                    <div class="chart-container mt-4">
+                        <canvas id="cotcYieldsChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center mt-1 text-slate-500">Target chemical yields for selected COTC projects. Data from Table 4.</p>
+                </div>
+
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3">Biofuel Production and Co-processing</h3>
+                    <p>Driven by mandates, climate policies, and sustainability goals to decarbonize transport fuels.</p>
+                    <div class="mt-2">
+                        <strong class="toggle-button" onclick="toggleDetails(this)">Key Pathways & Products (Click to expand) &#x25BC;</strong>
+                        <div class="details">
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>Renewable Diesel (HVO/HEFA):</strong> Dominant pathway, drop-in fuel from FOGs (e.g., Neste NEXBTL™).</li>
+                                <li><strong>Sustainable Aviation Fuel (SAF):</strong> Critical for aviation, often via HEFA-SPK.</li>
+                                <li><strong>Refinery Conversions:</strong> Full conversion to process 100% renewable feeds (e.g., Phillips 66 Rodeo).</li>
+                                <li><strong>Co-processing:</strong> Renewable feeds with crude fractions (lipids commercial, pyrolysis oil challenging).</li>
+                            </ul>
+                            <p class="text-sm mt-1"><em>Challenges: Feedstock availability/cost (FOGs); technical hurdles for lignocellulosic biomass; co-processing complexity (catalyst deactivation, product quality).</em></p>
+                        </div>
+                    </div>
+                     <div class="chart-container mt-4 h-72 sm:h-80">
+                        <canvas id="biofuelPathwaysChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center mt-1 text-slate-500">Illustrative commercial maturity of biofuel pathways. Based on Table 5 qualitative data.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="uncommercialized" class="content-section">
+            <div class="card">
+                <h2 class="text-2xl font-semibold mb-4 text-sky-700">The Road Not Taken: Uncommercialized Technologies</h2>
+                <p class="mb-3">Not all promising technologies achieve widespread commercial success. This section examines two notable examples from the past 25 years – Gas-to-Liquids (GTL) and the direct refinery integration of biomass pyrolysis oil. Understanding their limited adoption highlights the stringent economic and operational hurdles new technologies face in this capital-intensive industry. Technical feasibility alone is often not enough; economic viability and seamless integration are paramount.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3">Gas-to-Liquids (GTL)</h3>
+                    <p class="mb-2">Converts natural gas to liquid fuels (diesel, naphtha). Produces high-quality, clean fuels.</p>
+                    <div class="flex items-center text-red-600 mb-2"><span class="text-2xl mr-2">&#x26A0;</span> Limited Commercial Success</div>
+                    <strong class="text-slate-600">Reasons:</strong>
+                    <ul class="list-disc list-inside space-y-1 mt-1">
+                        <li><strong>High Capital Costs:</strong> Complex, multi-stage plants.</li>
+                        <li><strong>Economic Viability:</strong> Depends on a large, stable oil-to-gas price spread.</li>
+                        <li><strong>Energy Intensity:</strong> Consumes part of feedstock energy.</li>
+                        <li><strong>Competition:</strong> From LNG and conventional refining.</li>
+                    </ul>
+                    <p class="text-sm mt-2"><em>Despite some large plants (Shell Pearl, Sasol Oryx), GTL remains niche.</em></p>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3">Biomass Pyrolysis (for Direct Refinery Integration)</h3>
+                    <p class="mb-2">Fast pyrolysis of biomass to bio-oil, envisioned for co-processing in refineries.</p>
+                    <div class="flex items-center text-red-600 mb-2"><span class="text-2xl mr-2">&#x26A0;</span> Limited Commercial Success (for refinery integration)</div>
+                    <strong class="text-slate-600">Reasons:</strong>
+                    <ul class="list-disc list-inside space-y-1 mt-1">
+                        <li><strong>Poor Bio-oil Quality:</strong> High oxygen, acidic, unstable, immiscible with hydrocarbons.</li>
+                        <li><strong>Significant Upgrading Required:</strong> Costly, high hydrogen use, catalyst deactivation issues.</li>
+                        <li><strong>Catalytic Fast Pyrolysis (CFP) Challenges:</strong> Lower liquid yields, catalyst deactivation.</li>
+                        <li><strong>Refinery Integration Complexity:</strong> Risks of corrosion, coking, unpredictable product impacts.</li>
+                        <li><strong>Unfavorable Economics:</strong> High costs for pyrolysis, upgrading, and logistics.</li>
+                    </ul>
+                     <p class="text-sm mt-2"><em>Bio-oil mainly used for heat/power; refinery integration remains largely uncommercialized.</em></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion" class="content-section">
+            <div class="card">
+                <h2 class="text-2xl font-semibold mb-4 text-sky-700">Conclusion and Future Outlook</h2>
+                <p class="mb-3">The past 25 years have been transformative for the refining and petrochemical industries. Continuous catalytic innovation, a shift towards decarbonization (notably CCUS), the digital revolution, and strategic repositioning (COTC, biofuels) have been dominant themes. These advancements enabled cleaner fuels, higher chemical yields, and pathways to greater sustainability. However, the journey also showed that economic viability and integration challenges can sideline technically promising innovations like GTL and direct pyrolysis oil integration.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3">Key Enduring Trends Shaping the Future</h3>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Sustainability Imperative:</strong> Decarbonization, circular economy (chemical recycling), ESG.</li>
+                        <li><strong>Feedstock Flexibility & Diversification:</strong> Processing diverse inputs (heavy crudes, renewables, waste).</li>
+                        <li><strong>Deepening Integration:</strong> Complex energy/chemical hubs (refining, petchem, H2, bio-processes).</li>
+                        <li><strong>Pervasive Digitalization:</strong> AI, digital twins for managing complexity and enabling autonomy.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-3">Future Perspectives & R&D Focus</h3>
+                    <p class="mb-2">Future efforts will likely concentrate on:</p>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Cost-effective CCUS for dilute sources.</li>
+                        <li>Novel catalysts for challenging conversions (methane-to-olefins, mixed plastic recycling).</li>
+                        <li>Next-gen biofuels from non-food feedstocks (lignocellulose, algae).</li>
+                        <li>Scaling low-carbon hydrogen (blue/green) and its integration.</li>
+                        <li>Leveraging AI for predictive modeling, optimization, and autonomous operations.</li>
+                    </ul>
+                    <p class="mt-3 text-sm text-slate-600">The traditional refinery is evolving into a complex, integrated energy and chemicals facility, demanding continued innovation and strategic adaptation to a lower-carbon future.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-300 text-center p-4 mt-8">
+        <p class="text-sm">&copy; 2024 Interactive Report Viewer. Content based on "Technological Evolution in Petroleum Refining and Petrochemicals: 1999-2024".</p>
+    </footer>
+
+    <script>
+        const sections = document.querySelectorAll('.content-section');
+        const tabButtons = document.querySelectorAll('.tab-button');
+        let activeCharts = {};
+
+        function showSection(sectionId) {
+            sections.forEach(section => {
+                if (section.id === sectionId) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+            tabButtons.forEach(button => {
+                if (button.textContent.toLowerCase().replace(' ', '_').includes(sectionId.split('_')[0])) {
+                     button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+            
+            // Activate charts for the visible section
+            if (sectionId === 'core_processes' && !activeCharts['fccPropyleneChart']) createFccPropyleneChart();
+            if (sectionId === 'environmental' && !activeCharts['ccusProjectsChart']) createCcusProjectsChart();
+            if (sectionId === 'strategic_integration') {
+                if (!activeCharts['cotcYieldsChart']) createCotcYieldsChart();
+                if (!activeCharts['biofuelPathwaysChart']) createBiofuelPathwaysChart();
+            }
+        }
+
+        function toggleDetails(element) {
+            const detailsDiv = element.nextElementSibling;
+            if (detailsDiv.style.display === 'block') {
+                detailsDiv.style.display = 'none';
+                element.innerHTML = element.innerHTML.replace('&#x25B2;', '&#x25BC;'); // Up arrow to down
+            } else {
+                detailsDiv.style.display = 'block';
+                element.innerHTML = element.innerHTML.replace('&#x25BC;', '&#x25B2;'); // Down arrow to up
+            }
+        }
+        
+        // Helper function to wrap long labels
+        function formatLabel(str, maxwidth) {
+            if (!str) return '';
+            let sections = [];
+            let words = str.split(" ");
+            let temp = "";
+            words.forEach(function(item, index){
+                if(temp.length > 0) {
+                    temp += " " + item;
+                } else {
+                    temp = item;
+                }
+                if(temp.length > maxwidth){
+                    sections.push(temp);
+                    temp = "";
+                }
+            });
+            if(temp.length > 0) {
+                sections.push(temp);
+            }
+            return sections;
+        }
+
+        const chartTooltip = {
+            enabled: true,
+            mode: 'index',
+            intersect: false,
+            backgroundColor: 'rgba(0,51,102,0.85)', // Dark blue, slightly transparent
+            titleFont: {
+                size: 14,
+                weight: 'bold',
+            },
+            bodyFont: {
+                size: 12,
+            },
+            padding: 10,
+            cornerRadius: 4,
+            displayColors: true,
+            borderColor: 'rgba(0,123,255,0.9)',
+            borderWidth: 1,
+            callbacks: {
+                label: function(context) {
+                    let label = context.dataset.label || '';
+                    if (label) {
+                        label += ': ';
+                    }
+                    if (context.parsed.y !== null) {
+                        label += context.parsed.y;
+                        if (context.dataset.unit) {
+                             label += context.dataset.unit;
+                        }
+                    }
+                    return label;
+                }
+            }
+        };
+        
+        const chartOptionsBase = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: '#334155' // slate-700
+                    }
+                },
+                tooltip: chartTooltip
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { 
+                        color: '#475569' // slate-600
+                    },
+                    grid: {
+                        color: '#e2e8f0' // slate-200
+                    }
+                },
+                x: {
+                    ticks: { 
+                        color: '#475569', // slate-600
+                        callback: function(value, index, values) {
+                            return formatLabel(this.getLabelForValue(value), 16); // Wrap labels
+                        }
+                    },
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        };
+
+
+        function createFccPropyleneChart() {
+            const ctx = document.getElementById('fccPropyleneChart').getContext('2d');
+            activeCharts['fccPropyleneChart'] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Base FCC Yield', 'With ZSM-5 Additive'],
+                    datasets: [{
+                        label: 'Relative Propylene Yield Index',
+                        data: [100, 108.5], // Representing up to 8-9% increase (index 100 vs 108.5)
+                        backgroundColor: ['rgba(54, 162, 235, 0.6)', 'rgba(75, 192, 192, 0.6)'],
+                        borderColor: ['rgba(54, 162, 235, 1)', 'rgba(75, 192, 192, 1)'],
+                        borderWidth: 1,
+                        unit: ' (Index)'
+                    }]
+                },
+                options: { ...chartOptionsBase, plugins: { ...chartOptionsBase.plugins, title: { display: true, text: 'Illustrative Impact of ZSM-5 on Propylene Yield', color: '#0369a1'}}}
+            });
+        }
+
+        function createCcusProjectsChart() {
+            const ctx = document.getElementById('ccusProjectsChart').getContext('2d');
+            const ccusData = [
+                { name: "Shell Quest", capacity: 1.0 },
+                { name: "Air Products Port Arthur", capacity: 1.0 },
+                { name: "NWR Sturgeon Refinery", capacity: 1.2 },
+                { name: "Porthos Project (Initial)", capacity: 2.5 },
+                { name: "ExxonMobil Baytown (Planned)", capacity: 7.0 } // Using lower end of 7-10 range for chart
+            ];
+            activeCharts['ccusProjectsChart'] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ccusData.map(p => p.name),
+                    datasets: [{
+                        label: 'Annual CO2 Capture Capacity',
+                        data: ccusData.map(p => p.capacity),
+                        backgroundColor: 'rgba(255, 159, 64, 0.6)',
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 1,
+                        unit: ' Mtpa'
+                    }]
+                },
+                options: { ...chartOptionsBase, plugins: { ...chartOptionsBase.plugins, title: { display: true, text: 'CCUS Project Capacities', color: '#0369a1'}}}
+            });
+        }
+
+        function createCotcYieldsChart() {
+            const ctx = document.getElementById('cotcYieldsChart').getContext('2d');
+            const cotcData = [
+                { name: "Traditional Refinery", yield: 10 }, // Average 8-12%
+                { name: "Hengli Petchem", yield: 42 },
+                { name: "Zhejiang Petchem (ZPC)", yield: 45 },
+                { name: "Aramco Yanbu (Initial Target)", yield: 45 },
+                { name: "Next-Gen COTC (Potential)", yield: 75 } // Representing 70-80%
+            ];
+            activeCharts['cotcYieldsChart'] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: cotcData.map(p => p.name),
+                    datasets: [{
+                        label: 'Target Chemical Yield',
+                        data: cotcData.map(p => p.yield),
+                        backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1,
+                        unit: '%'
+                    }]
+                },
+                options: { ...chartOptionsBase, plugins: { ...chartOptionsBase.plugins, title: { display: true, text: 'COTC Project Chemical Yields', color: '#0369a1'}}}
+            });
+        }
+        
+        function createBiofuelPathwaysChart() {
+            const ctx = document.getElementById('biofuelPathwaysChart').getContext('2d');
+            activeCharts['biofuelPathwaysChart'] = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['HEFA/HVO Standalone', 'Refinery Conversion (HEFA)', 'Co-processing Lipids', 'Co-processing Pyrolysis/Plastics', 'Gasification + FT', 'Alcohol-to-Jet (ATJ)'],
+                    datasets: [{
+                        label: 'Relative Commercial Maturity/Scale',
+                        data: [40, 25, 15, 5, 5, 10], // Qualitative representation
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(153, 102, 255, 0.7)',
+                            'rgba(255, 159, 64, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#334155', boxWidth: 20, padding:15 } },
+                        title: { display: true, text: 'Illustrative Commercial Maturity of Biofuel Pathways', color: '#0369a1'},
+                        tooltip: chartTooltip
+                    }
+                }
+            });
+        }
+
+        // Initialize first section
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('overview');
+        });
+    </script>
+</body>
+</html>
